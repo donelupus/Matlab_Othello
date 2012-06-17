@@ -6,7 +6,7 @@
 %   col: Farbe des gesetzten Steins.
 %   ValidPositions_linear: Positions des gesetzten Steins.
 %
-%  R�ckgabe: 
+%  R�ckgabe: 
 %  boardNew: 8x8 Matrix, neues aktuelles Spielfeld nach Spielzug
 %
 % Das Feld wird folgendermassen durchnummeriert:
@@ -29,24 +29,26 @@
 % |  8 |    |    |    |    |    |    |    |
 % +----+----+----+----+----+----+----+----+
 
-function [ boardNew ] = Spielzug_druchfuehren_01( board, col, ValidPositions_linear)
+function [ boardNew ] = Spielzug_druchfuehren_02( board, col, ValidPosition)
 
 
-
+disp('spielzugmachen')
 
 tic;
 
 % Umrechung in zweidimensionale Koordinaten:
-divMatrix = 8;
-if rem(ValidPositions_linear,divMatrix) == 0;
-    y = ValidPositions_linear / divMatrix;
-    x = 8;
-else
-    y = ValidPositions_linear / divMatrix;
-    y = fix(y);
-    x = ValidPositions_linear - (8*y);
-    y = y+1; 
-end
+% divMatrix = 8;
+% if rem(ValidPositions_linear,divMatrix) == 0;
+%     y = ValidPositions_linear / divMatrix;
+%     x = 8;
+% else
+%     y = ValidPositions_linear / divMatrix;
+%     y = fix(y);
+%     x = ValidPositions_linear - (8*y);
+%     y = y+1; 
+% end
+x = ValidPosition(1);
+y = ValidPosition(2);
 
 Dir = [  0  1;...
          0 -1;...
@@ -61,12 +63,12 @@ Dir = [  0  1;...
     
 boardNew = board;
 boardNew(x,y) = col;
-for dir = 1:8 % richtung auswaehlen
+for dir = 1:8 % richtung auswählen
     Step_in_dir = Dir(dir,:);
     Neighbour = [x + Step_in_dir(1), y+Step_in_dir(2)];
 
     if max(Neighbour) > 8 | min(Neighbour) < 1
-        continue % vom Rand gefallen, naechste Richtung
+        continue % vom Rand gefallen, nächste Richtung
     end
 
     if board(Neighbour(1), Neighbour(2)) == -col
