@@ -10,8 +10,8 @@
 
 function [ ValidPos, Store_to_Tree ] = Valid_Pos_05(Aktuelles_Board, col, Store_from_Tree )
 % Incrementelle Implementierung von Valid Pos.
-% Falls Funktion ohne Store_from_Tree aufgerufen wird, muss dafuer eine
-% leere Cell uebergeben werden.
+% Falls Funktion ohne Store_from_Tree aufgerufen wird, muss dafür eine
+% leere Cell übergeben werden.
 
 % Inkrementell rechnen oder nur mit dem aktuellen Board?
 Incremental = ~isempty(Store_from_Tree);
@@ -68,7 +68,7 @@ else
     Altes_Board    = Store_from_Tree.Board;
     
     % Aktuellen Zug berechnen:
-    Diff = abs(Altes_Board - Aktuelles_Board);
+    Diff = abs(Altes_Board) - abs(Aktuelles_Board);
     Letzter_Zug = [0,0];
     for y=1:8
         for x = 1:8
@@ -81,8 +81,9 @@ else
             break
         end
     end
+    Letzter_Zug
     
-    % neuen Stein aus der Randliste Loeschen:
+    % neuen Stein aus der Randliste Löschen:
     Randfeld_Board(Letzter_Zug(1), Letzter_Zug(2)) = 0;
     for i = 1:Randfeld_Cnt
         if Randfeld_Liste(i,1) == Letzter_Zug(1) & Randfeld_Liste(i,2) == Letzter_Zug(2)
@@ -100,8 +101,9 @@ else
         end
     end
     
-    % Pruefe ob Nachbarn des neuen Zuges Randfelde sind.
-    for n = 1:8 % Nachbar fuer Nachbar
+    
+    % Prüfe ob Nachbarn des neuen Zuges Randfelder sind.
+    for n = 1:8 % Nachbar für Nachbar
         X = Letzter_Zug(1,1)+Dir(n,1);
         Y = Letzter_Zug(1,2)+Dir(n,2);
         if X > 8 | X < 1 | Y > 8 | Y < 1
@@ -113,7 +115,7 @@ else
         if Aktuelles_Board(X,Y) == 0
             Randfeld_Cnt = Randfeld_Cnt + 1;
             Randfeld_Board(X,Y) = 1;
-            Randfeld_Liste(Randfeld_Cnt,1) = Y;
+            Randfeld_Liste(Randfeld_Cnt,1) = X;
             Randfeld_Liste(Randfeld_Cnt,2) = Y;
             continue
         end
@@ -125,7 +127,7 @@ ValPos = zeros(64,2);
 ValPos_cnt = 0;
 FlipPos = zeros(2,25,64);
 
-% Pruefe, ob Randfelder auch Valid Positions sind:
+% Prüfe, ob Randfelder auch Valid Positions sind:
 for i = 1:Randfeld_Cnt   
     isvalid = false; % ist Randfeld valid Position
     
@@ -134,7 +136,7 @@ for i = 1:Randfeld_Cnt
        Neighbour = [Randfeld_Liste(i,1) + Step_in_dir(1), Randfeld_Liste(i,2)+Step_in_dir(2)];
 
        if Neighbour(1) > 8 | Neighbour(1) < 1 | Neighbour(2) > 8 | Neighbour(2) < 1
-           continue % vom Rand gefallen, naechste Richtung
+           continue % vom Rand gefallen, nächste Richtung
        end
 
        templist = zeros(6,2); % Zu flippende Gegner-Steine in einer Richtung
@@ -170,7 +172,7 @@ for i = 1:Randfeld_Cnt
                         isvalid = true;
                     end
                     
-                    % Flipfelder noch anfuegen:
+                    % Flipfelder noch anfügen:
                     for j = 1:templist_cnt
                         FlipPos(1,FlipPos(1,1,ValPos_cnt)+j+1,ValPos_cnt) = templist(j,1);
                         FlipPos(2,FlipPos(1,1,ValPos_cnt)+j+1,ValPos_cnt) = templist(j,2);
@@ -188,7 +190,16 @@ Store_to_Tree.Randfeld_Board = Randfeld_Board;
 Store_to_Tree.Randfeld_Cnt   = Randfeld_Cnt;
 Store_to_Tree.Board          = Aktuelles_Board;
 
+brd = Aktuelles_Board
+%Randfeld_Board
+for i=1:ValPos_cnt
+    brd(ValPos(i,1), ValPos(i,2)) = brd(ValPos(i,1), ValPos(i,2)) + 8;
+end
+% for i=1:Randfeld_Cnt
+%     brd(Randfeld_Liste(i,1), Randfeld_Liste(i,2)) = brd(Randfeld_Liste(i,1), Randfeld_Liste(i,2)) + 8;
+% end
 
+brd
 ValidPos =  ValPos(1:ValPos_cnt,:);
     
     
