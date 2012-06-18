@@ -4,6 +4,7 @@
 % Store_from_Tree.Randfeld_Board;
 % Store_from_Tree.Randfeld_Cnt;
 % Store_from_Tree.Board;
+% Store_from_Tree.Flipsteine;
 
 
 
@@ -12,7 +13,7 @@ function [ ValidPos, Store_to_Tree ] = Valid_Pos_05(Aktuelles_Board, col, Store_
 % Incrementelle Implementierung von Valid Pos.
 % Falls Funktion ohne Store_from_Tree aufgerufen wird, muss dafür eine
 % leere Cell übergeben werden.
-
+tic;
 % Inkrementell rechnen oder nur mit dem aktuellen Board?
 Incremental = ~isempty(Store_from_Tree);
 
@@ -61,7 +62,6 @@ if ~Incremental
     
 else
     % Liste der aktuellen Randfelder mit aktuellem Zug updaten.
-    
     Randfeld_Liste = Store_from_Tree.Randfeld_Liste;
     Randfeld_Board = Store_from_Tree.Randfeld_Board;
     Randfeld_Cnt   = Store_from_Tree.Randfeld_Cnt;
@@ -172,10 +172,12 @@ for i = 1:Randfeld_Cnt
                         isvalid = true;
                     end
                     
-                    % Flipfelder noch anfügen:
+                    % Flipfelder noch anfuegen:
+                    FlipPos(1,2,ValPos_cnt) = ValPos(ValPos_cnt, 1);
+                    FlipPos(2,2,ValPos_cnt) = ValPos(ValPos_cnt, 2);
                     for j = 1:templist_cnt
-                        FlipPos(1,FlipPos(1,1,ValPos_cnt)+j+1,ValPos_cnt) = templist(j,1);
-                        FlipPos(2,FlipPos(1,1,ValPos_cnt)+j+1,ValPos_cnt) = templist(j,2);
+                        FlipPos(1,FlipPos(1,1,ValPos_cnt)+j+2,ValPos_cnt) = templist(j,1);
+                        FlipPos(2,FlipPos(1,1,ValPos_cnt)+j+2,ValPos_cnt) = templist(j,2);
                     end
                     FlipPos(1,1,ValPos_cnt) = FlipPos(1,1,ValPos_cnt) + templist_cnt;
                     run = false;
@@ -189,17 +191,10 @@ Store_to_Tree.Randfeld_Liste = Randfeld_Liste;
 Store_to_Tree.Randfeld_Board = Randfeld_Board;
 Store_to_Tree.Randfeld_Cnt   = Randfeld_Cnt;
 Store_to_Tree.Board          = Aktuelles_Board;
+Store_to_Tree.Flipsteine     = FlipPos;
+Store_to_Tree.ValPos_cnt     = ValPos_cnt;
 
-brd = Aktuelles_Board
-%Randfeld_Board
-for i=1:ValPos_cnt
-    brd(ValPos(i,1), ValPos(i,2)) = brd(ValPos(i,1), ValPos(i,2)) + 8;
-end
-% for i=1:Randfeld_Cnt
-%     brd(Randfeld_Liste(i,1), Randfeld_Liste(i,2)) = brd(Randfeld_Liste(i,1), Randfeld_Liste(i,2)) + 8;
-% end
-
-brd
+toc
 ValidPos =  ValPos(1:ValPos_cnt,:);
     
     
