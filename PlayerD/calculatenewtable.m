@@ -3,7 +3,7 @@ function [newtable] = calculatenewtable(oldtable,newmove,color)
 %   Detailed explanation goes here
 
 posrow = newmove.row;
-poscol = double(newmove.col-96);
+poscol = newmove.col;
 
 oldtable = setrowline(oldtable, poscol, posrow, color, -1,  0); % horinzontal links       
 oldtable = setrowline(oldtable, poscol, posrow, color,  1,  0); % horinzontal rechts
@@ -20,8 +20,11 @@ end
 
 function [newtable] = setrowline(oldtable, poscol, posrow, color, h,v)
 
-    for index = 1:8
-            %Vertikal unten
+    for index = 1:7
+             
+         if ~(((posrow+h*index) > 7) || ((poscol+v*index) > 7) ||...
+              ((posrow+h*index) < 2) || ((poscol+v*index) < 2))
+          
             if(oldtable(posrow+h*index,poscol+v*index) == (-1)*color )
                 if(oldtable(posrow+h*(index+1),poscol+v*(index+1)) == color) 
                     for k = 1:index
@@ -31,6 +34,7 @@ function [newtable] = setrowline(oldtable, poscol, posrow, color, h,v)
             else 
                 break;
             end
+         end  
     end
         newtable = oldtable;
 end

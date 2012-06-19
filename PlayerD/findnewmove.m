@@ -1,45 +1,33 @@
-function [ newmove startindex stopindex] = findnewmove(mlist, startindex, stopindex, lastmovestr)
+function [ newmovedez startindex stopindex] = findnewmove(mlist, startindex, stopindex, lastmove)
 %FINDNEWMOVE Summary of this function goes here
 %   Detailed explanation goes here
-
-    startflag = 0;
-        for index = startindex:stopindex-1
-               
-            [trash pindex] = regexp(mlist{index},['(\<)',lastmovestr], 'match');
-            if pindex                            %%strfind(movelist{index},lastmovestr)
-                   
-                    [trash pindex] = regexp(mlist{index},['(\<)',lastmovestr,'(\>)'],'match');
-                    [trash pindex2] = regexp(mlist{index+1},['(\<)',lastmovestr],'match');
-                    
-                if pindex
-                    if pindex2 
-                    startindex = index + 1;
-                    startflag = 1;
-                    end
-                elseif startflag == 0;
-                    startindex = index;
-                    startflag = 1;
-                end
-
-            elseif startflag == 1;
-                    stopindex = index-1;
-                    break;
-            end
-        end
+%   Findet in mlist den nächsten passenden Zug und schränkt auch den Start-
+%   und Stopindex ein um nicht die gesamte Tabelle zu durchsuchen 
+    
+        lastmovedez = lastmove.col*10+lastmove.row;
         
-        if startflag == 0
-            startindex = stopindex;
-        end
+        % for DEBUG
+        % str = sprintf('lmdez %d - lmcount %d start %d stop %d \n',lastmovedez,lastmove.count,startindex, stopindex);
+        % disp(str);
+        % ---------
         
-        
-        if startindex == stopindex
-            newmove.row = 0;
-            newmove.col = 0;
+        [row col] = find(mlist(startindex:stopindex,lastmove.count)==lastmovedez);      %% finde letzen Zug im Indexbereich
+        if ~isempty(row)
+            stopindex =  startindex + row(end) - 1;                                     %% Setze neuen Indexbereich
+            startindex = startindex + row(1) - 1;
+            [trash index] = max(mlist(startindex:stopindex,65));                        %% in Spalte 65 sind die Steinüberzahl des Spieles gespeichert
+            newmovedez = mlist(startindex + index -1,lastmove.count+1);                 %% schreibe neuen Zug mit max. Punktzahl
+            [row col] = find(mlist(startindex:stopindex,lastmove.count+1)==newmovedez); %% berechne neune Indexbereich
+            stopindex =  startindex + row(end) - 1;                                     %% für neuen Zug !!
+            startindex = startindex + row(1) - 1;
         else
-            [match posend] = regexp(mlist{startindex},['(\<)',lastmovestr],'match','end');
-            str = mlist{startindex};
-            newmove.row = str(posend+3)-48;
-            newmove.col = str(posend+2);
+            startindex = stopindex;
+            newmovedez = 0;
         end
+        
+        % for DEBUG
+        % str = sprintf('nmdez %d - lmcount %d start %d stop %d \n',newmovedez,lastmove.count,startindex, stopindex);
+        % disp(str);
+        % ------------
 end
 

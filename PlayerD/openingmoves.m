@@ -2,113 +2,156 @@ function b = openingmoves(table,color)
 %OPENINGMOVES Summary of this function goes here
 %   Detailed explanation goes here
 
-%test table
-%             table =  [0  0  0  0  0  0  0  0; ...
-%                       0  0  0  0  0  0  0  0; ...
-%                       0  0  0  0  0  0  0  0; ...
-%                       0  0  0  1 -1  0  0  0; ...
-%                       0  0  0 -1  1 -1  0  0; ...
-%                       0  0  0  0  0  0  0  0; ...  
-%                       0  0  0  0  0  0  0  0; ...
-%                       0  0  0  0  0  0  0  0;];
-%              color = 1;
-% 
+%   Spielbrett Adressierung
+%   -------------------------
+%   | 1,1 | 1,2 | ... | 1,8 | 
+%   -------------------------
+%   | 2,1 | ...       | 2,8 |
+%   -------------------------
+%   | ...                   |
+%   -------------------------
+%   | 8,1 | ...       | 8,8 |
+%   -------------------------
+%  
+%   !!! ****************************************************************!!!
+%   Dies entspricht der row col Entsprechung
+%   Dezimal wird aber zusammengeschrieben colrow verwendet. !!!!
+%   Beispielsweise ist 3,4 in dezimal 43 also D3 !!
+%
+%   !!! ****************************************************************!!!
+%   
 
-persistent lastmovetable;               %% letztes Spielbrett  
-persistent lastmove;                    %% letzer Spielzug vom Gegner
-persistent lastmovestr;                 %% letzen Spielzüge als String
-persistent startindex;                  %% Startindex in der Suchliste am Anfang 1
-persistent stopindex;                   %% Stopindex in der Suchliste am Anfang Ende der Liste
-%persistent finishflag;                  %% Zeigt das Ende der Eröffnungszüge an
+%% Variablen erstellen 
+% -----------------------------------------------------------------------
+persistent lastmovetable;               % letztes Spielbrett  
+persistent lastmove;                    % letzer Spielzug vom Gegner
+persistent diagflag;                    % legt in abhängigkeit von D3(also 34) in der moveliste die anfangszüge fest
+persistent startindex;                  % Startindex in der Suchliste am Anfang 1
+persistent stopindex;                   % Stopindex in der Suchliste am Anfang Ende der Liste
+
+persistent finishflag;                 % Zeigt das Ende der
+                                        %Eröffnungszüge an und muss am Ende einer Partie wieder freigegeben werden
+
+%% je nach Farbe wird eine bestimmte Movetabelle geladen bei schwarz wir beginnen --> mlfirst
 if color == -1
     persistent mlfirst;
 else
     persistent mlsecond;
 end
-% if isempty(finishflag)
-%     finishflag = 0;
-% end
+% ------------------------------------------------------------------------
 
-   %if finishflag == 0                  %% solange 0 dann werden Eröffnungszüge gesucht
-        
-        %%Initialisierung
-        if color == -1
-            [lastmove mlfirst startindex stopindex lastmovetable] = init_var(lastmove, mlfirst, startindex, stopindex, lastmovetable, color);
-        else
-            [lastmove mlsecond startindex stopindex lastmovetable] = init_var(lastmove, mlsecond, startindex, stopindex, lastmovetable, color);
+%% Eröffnungszüge -- prüfen ob bereits vollendet
+if isempty(finishflag)                
+    finishflag = 0;
+end
+
+if ((finishflag == 1) && ((sum(sum(table,1)) == 0) || (sum(sum(table,1)) == -3)))
+
+    finishflag = 0;
+
+end
+
+% --------------------------------------------------------------------------
+
+
+%% solange finishflag == 0 dann werden Eröffnungszüge gesucht
+if finishflag == 0                  
+
+
+%% Initialisierung
+%--------------------------------------------------------------------------
+    if color == -1
+       [lastmove mlfirst startindex stopindex lastmovetable,diagflag] = init_var(lastmove, mlfirst, startindex, stopindex,...
+                                                                                 lastmovetable, color,diagflag);
+    else
+       [lastmove mlsecond startindex stopindex lastmovetable,diagflag] = init_var(lastmove, mlsecond, startindex, stopindex,...
+                                                                                  lastmovetable, color, diagflag);
+    end
+    %--------------------------------------------------------------------------
+
+    %% Hauptteil
+    %-------------------------------------------------------------------------
+
+    % berechne letzen Zug        
+    [lastmove diagflag] = lastmovecal(table,lastmovetable,lastmove,diagflag,color);       
+
+
+    if color == -1
+        if lastmove.count == 1      
+            newmovedez = 43;               %% ist immer 43 in mlfirst(1,1) entspricht D3;
+            diagflag = randi(4,1,1)-1;     %% zufalls zahl 0 -3 für Anfangszugvarianten
+        else                               %% ab dem 2. eigenen Zug
+            [newmovedez startindex stopindex] = findnewmove(mlfirst, startindex, stopindex, lastmove);
         end
-        %%ende Initialisierung
-        
-        lastmove = lastmovecal(table,lastmovetable);       %% berechne letzen Zug
-        
-        if color == -1
-            if lastmove.row == 0 && lastmove.col == 0          %% --> ich fange an
-                % zufällisum(max(difftable,[],1))g ersten Anfang wählen
-                index = randi(stopindex,1,1);
-                str = mlfirst{index};
-                newmove.row = str(3)-48;
-                newmove.col = str(2);
-            else                                               %% --> Gegener hat angefangen
-        %% tabelle noch mit invertieren dass -d3 gleich schwarz ist und nicht weiss 
-                lmovestr = sprintf('+%s%s',lastmove.col,(lastmove.row+48));  %% in mlfirst ist schwarz +1 
-                lastmovestr = [lastmovestr,lmovestr];
-                [newmove startindex stopindex] = findnewmove(mlfirst, startindex, stopindex, lastmovestr);
-            end
-        else
-            %% --> Gegner hat angefangen
-                lmovestr = sprintf('-%s%s',lastmove.col,(lastmove.row+48));
-                lastmovestr = [lastmovestr,lmovestr];
-                [newmove startindex stopindex] = findnewmove(mlsecond, startindex, stopindex, lastmovestr);
-        end
-        
+    else   %% --> Gegner hat angefangen
+            [newmovedez startindex stopindex] = findnewmove(mlsecond, startindex, stopindex, lastmove);
+    end
+
+    %--------------------------------------------------------------------------
+
         if startindex == stopindex
             b = table;                   %% Ende der Anfangszüge gibt gleiche Matrix zurück
-            %%finishflag = 1;
-            clear mlfirst;                %% gebe Speicher frei
-            clear mlsecond;
+            finishflag = 1;
+            if color == -1               %% gebe Speicher frei
+                clear mlfirst;
+            else
+                clear mlsecond;
+            end
             clear lastmovetable;
             clear lastmove;
-            clear lastmovestr;
+            clear diagflag;
             clear startindex;
             clear stopindex;
             disp('opening moves finished');
             return;
         end
-        
-        if color == -1
-            str = sprintf('+%s%s',newmove.col,(newmove.row+48));
-            lastmovestr = [lastmovestr,str];                    %% aktualisiere moveliste mit eigenen Zug
-        else
-            str = sprintf('-%s%s',newmove.col,(newmove.row+48));
-            lastmovestr = [lastmovestr,str];                    %% aktualisiere moveliste mit eigenen Zug
-        end
-        
-        b = calculatenewtable(table,newmove,color);
-%    end
-    
+    %--------------------------------------------------------------------------
+
+
+    %% Schlussteil 
+    % neuen Zug berechnen von dezimal auf Matrixnotation und neue Brett berechnen
+    % 
+
+    newmove = calculatenewmove(newmovedez,diagflag);
+    b = calculatenewtable(table,newmove,color);
+    lastmovetable = b;
+    if ~((color == -1) && (lastmove.count == 1))       %% falls wir beginnen dann war kein letzer Move --> nicht hochzählen
+        lastmove.count = lastmove.count + 1;
+    end
+
+%--------------------------------------------------------------------------    
+  end
+
 end
 
 
 
 
-function [lastmove movelist startindex stopindex lastmovetable] = init_var(lastmove, movelist, startindex, stopindex, lastmovetable, color)
 
-    %% initialisierung
+
+
+
+%% Initialisierung
+%--------------------------------------------------------------------------
+function [lastmove movelist startindex stopindex lastmovetable, diagflag] = init_var(lastmove, movelist, startindex,...
+                                                                           stopindex, lastmovetable, color, diagflag)
+
+    % initialisierung
         if isempty(lastmove)
             lastmove.row = 0;
             lastmove.col = 0;
-            %%lastmove.count = 0;
+            lastmove.count = 0;
         end
         
         if color == -1
             if isempty(movelist)
-               load('mlfirst.mat');
-               movelist = mlfirst;
+               load('mlfirstnum.mat');
+               movelist = mlfirstnum;
             end
         else
             if isempty(movelist)
-               load('mlsecond.mat');
-               movelist = mlsecond;
+               load('mlsecondnum.mat');
+               movelist = mlsecondnum;
             end
         end
         
@@ -118,7 +161,10 @@ function [lastmove movelist startindex stopindex lastmovetable] = init_var(lastm
             stopindex = length(movelist);
         end
 
-
+        if isempty(diagflag)
+            diagflag = 0;
+        end
+        
         if isempty(lastmovetable)
 
             lastmovetable =  [0  0  0  0  0  0  0  0; ...
@@ -128,14 +174,13 @@ function [lastmove movelist startindex stopindex lastmovetable] = init_var(lastm
                               0  0  0 -1  1  0  0  0; ...
                               0  0  0  0  0  0  0  0; ...  
                               0  0  0  0  0  0  0  0; ...
-                              0  0  0  0  0  0  0  0;]
-            %%lastmove.count = 1;
+                              0  0  0  0  0  0  0  0;];
         end
-        %% ende Initialisierung
+
 
 
 end
-
+%--------------------------------------------------------------------------
 
 
 

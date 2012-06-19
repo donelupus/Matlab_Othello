@@ -5,8 +5,10 @@
 function b = PlayerD(b, color, t)
 
  addpath(['players' filesep 'PlayerD']);
-   
- b = openingmoves(b,color);
  
-
+ tic;
+ b = openingmoves(b,color);
+ time = toc;
+ disp(time);
+ 
 end
