@@ -197,6 +197,8 @@ Store_to_Tree.ValPos_cnt     = ValPos_cnt;
 toc
 ValidPos =  ValPos(1:ValPos_cnt,:);
     
-    
+    if ValPos_cnt == 0
+        ValidPos = [-1,-1];
+    end
 
 
