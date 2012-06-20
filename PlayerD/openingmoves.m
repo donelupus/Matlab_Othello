@@ -19,6 +19,9 @@ function b = openingmoves(table,color)
 %   Beispielsweise ist 3,4 in dezimal 43 also D3 !!
 %
 %   !!! ****************************************************************!!!
+%
+%  Rückgabe ist ein aktualisiertes Brett falls Eröffnungszüge vorhanden
+%  sind ansonsten wird 0 zurückgegeben !!
 %   
 
 %% Variablen erstellen 
@@ -45,7 +48,7 @@ if isempty(finishflag)
     finishflag = 0;
 end
 
-if ((finishflag == 1) && ((sum(sum(table,1)) == 0) || (sum(sum(table,1)) == -3)))
+if ((finishflag == 1) && ((sum(sum(abs(table),1)) == 4) || (sum(sum(abs(table),1)) == 5)))
 
     finishflag = 0;
 
@@ -55,7 +58,7 @@ end
 
 
 %% solange finishflag == 0 dann werden Eröffnungszüge gesucht
-if finishflag == 0                  
+  if finishflag == 0                  
 
 
 %% Initialisierung
@@ -90,7 +93,7 @@ if finishflag == 0
     %--------------------------------------------------------------------------
 
         if startindex == stopindex
-            b = table;                   %% Ende der Anfangszüge gibt gleiche Matrix zurück
+            b = 0;                   %% Ende der Anfangszüge gibt 0 zurück
             finishflag = 1;
             if color == -1               %% gebe Speicher frei
                 clear mlfirst;
@@ -120,6 +123,8 @@ if finishflag == 0
     end
 
 %--------------------------------------------------------------------------    
+  else % falls finishflag == 1 ist
+       b = 0;   %% Ende der Eröffnungszüge gibt 0 zurück
   end
 
 end
