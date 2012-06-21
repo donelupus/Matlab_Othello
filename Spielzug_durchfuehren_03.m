@@ -46,6 +46,14 @@ Incremental = ~isempty(Store_from_Tree);
 x = ValidPosition(1);
 y = ValidPosition(2);
 
+if (ValidPosition(1) == -1)
+    boardNew = board;
+    return
+end
+
+    
+    
+
 Dir = [  0  1;...
          0 -1;...
          1  0; ...

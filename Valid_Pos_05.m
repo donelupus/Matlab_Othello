@@ -194,7 +194,7 @@ Store_to_Tree.Board          = Aktuelles_Board;
 Store_to_Tree.Flipsteine     = FlipPos;
 Store_to_Tree.ValPos_cnt     = ValPos_cnt;
 
-toc
+%toc
 ValidPos =  ValPos(1:ValPos_cnt,:);
     
     if ValPos_cnt == 0
