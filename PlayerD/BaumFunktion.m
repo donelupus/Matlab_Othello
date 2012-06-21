@@ -26,6 +26,7 @@ function [BestBewertung, BestZug, BestBrett ] = ...
 % persistent Index_Brett Index_Zug Index_ValidPos  Index_StoreValidPos ...
 %            Index_Rating Index_KnotenID Index_VorBrettID;
 % Tiefe_Flag = 3;
+tic;
 A = -Inf;
 B = Inf;
 % Tiefe = 4;
@@ -55,7 +56,10 @@ else
     [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
 end
 
-
+BaumTime = toc;
+disp('Time Baum:#######');
+disp(BaumTime);
+disp('end!#############');
 % Index_Brett = 1;
 % Index_Zug =2;
 % Index_ValidPos = 3;

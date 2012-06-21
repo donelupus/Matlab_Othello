@@ -7,7 +7,7 @@ BestBrett = [];
 if Tiefe <= 0
 %     BestBewertung = GetBoardEvalBetter(Brett,1,Move_No);
     Move_No = length(find(Brett~=0))-4;
-    BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters,Akt_Zug);
+    BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters);
 %     BestBewertung = rating_fct_2(-1,Brett);
 else
     [ValidPos, Store_ValidPos] = Valid_Pos_05(Brett,-1,Store_ValidPos);

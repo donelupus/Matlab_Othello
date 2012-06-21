@@ -59,7 +59,7 @@ end
 
 %% solange finishflag == 0 dann werden Eröffnungszüge gesucht
   if finishflag == 0                  
-
+tic;
 
 %% Initialisierung
 %--------------------------------------------------------------------------
@@ -121,7 +121,10 @@ end
     if ~((color == -1) && (lastmove.count == 1))       %% falls wir beginnen dann war kein letzer Move --> nicht hochzählen
         lastmove.count = lastmove.count + 1;
     end
-
+    time = toc;
+    disp('openingmoves Time:');
+    disp(time);
+    disp('end');
 %--------------------------------------------------------------------------    
   else % falls finishflag == 1 ist
        b = 0;   %% Ende der Eröffnungszüge gibt 0 zurück
