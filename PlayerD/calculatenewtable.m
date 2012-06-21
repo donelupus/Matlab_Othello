@@ -20,21 +20,26 @@ end
 
 function [newtable] = setrowline(oldtable, poscol, posrow, color, h,v)
 
-    for index = 1:7
+    for index = 1:6
              
-         if ~(((posrow+h*index) > 7) || ((poscol+v*index) > 7) ||...
-              ((posrow+h*index) < 2) || ((poscol+v*index) < 2))
+         if ~(((posrow+h*index) > 8) || ((poscol+v*index) > 8) ||...
+              ((posrow+h*index) < 1) || ((poscol+v*index) < 1))
           
             if(oldtable(posrow+h*index,poscol+v*index) == (-1)*color )
-                if(oldtable(posrow+h*(index+1),poscol+v*(index+1)) == color) 
-                    for k = 1:index
-                        oldtable(posrow+h*k,poscol+v*k) = color;
+                  
+               if ~(((posrow+h*(index + 1)) > 8) || ((poscol+v*(index + 1)) > 8) ||...
+                    ((posrow+h*(index + 1)) < 1) || ((poscol+v*(index + 1)) < 1))
+                    
+                    if(oldtable(posrow+h*(index+1),poscol+v*(index+1)) == color) 
+                        for k = 1:index
+                            oldtable(posrow+h*k,poscol+v*k) = color;
+                        end
                     end
-                end    
+               end
             else 
-                break;
+               break;
             end
-         end  
+         end
     end
         newtable = oldtable;
 end

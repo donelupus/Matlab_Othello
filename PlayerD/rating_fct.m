@@ -17,19 +17,19 @@ function[rating_value, rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Coun
 %%
 %Laden der Eichfunktionen
 
-addpath('Weighting_Vectors');
+% addpath('Weighting_Vectors');
 
-load('static_field_rating_bool_vec.mat');
-load('counters_no_rating_bool_vec.mat');
-load('border_counters_rating_bool_vec.mat');
-load('inertia_moment_rating_bool_vec.mat');
-load('compl_lines_rating_bool_vec.mat');
-
-load('static_field_rating_value_vec.mat');
-load('counters_no_rating_value_vec.mat');
-load('border_counters_rating_value_vec.mat');
-load('inertia_moment_rating_value_vec.mat');
-load('compl_lines_rating_value_vec.mat');
+% load('static_field_rating_bool_vec.mat');
+% load('counters_no_rating_bool_vec.mat');
+% load('border_counters_rating_bool_vec.mat');
+% load('inertia_moment_rating_bool_vec.mat');
+% load('compl_lines_rating_bool_vec.mat');
+% 
+% load('static_field_rating_value_vec.mat');
+% load('counters_no_rating_value_vec.mat');
+% load('border_counters_rating_value_vec.mat');
+% load('inertia_moment_rating_value_vec.mat');
+% load('compl_lines_rating_value_vec.mat');
 
 
 %%

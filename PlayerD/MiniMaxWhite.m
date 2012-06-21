@@ -5,13 +5,13 @@ BestZugIndex = [];
 BestBrett = [];
 
 if Tiefe <= 0
-    BestBewertung = GetBoardEvalBetter(Brett,1,Move_No);
-%     Move_No = length(find(Brett~=0))-4;
-%     BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters,Akt_Zug);
+%     BestBewertung = GetBoardEvalBetter(Brett,1,Move_No);
+    Move_No = length(find(Brett~=0))-4;
+    BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters,Akt_Zug);
 %     BestBewertung = rating_fct_2(1,Brett);
 else
     [ValidPos, Store_ValidPos] = Valid_Pos_05(Brett,1,Store_ValidPos);
-    ValidPosNum = length(ValidPos(:,1));
+    ValidPosNum = size(ValidPos,1);
     if ValidPosNum == 1 && ValidPos(1,1) < 0
         BestBewertung = 0;
         BestZug = [0,0];
@@ -19,10 +19,11 @@ else
         return
     else if ValidPosNum == 1 % Nur eine mögliche Position --> nicht mehr weiter suchen
             BestBewertung = 0;
-            BestZug = ValidPos(1,:);
-            BestBrett = Spielzug_durchfuehren_03(Brett,1,ValidPos(1,:),Store_ValidPos);
+            BestZug = ValidPos;
+            BestBrett = Spielzug_durchfuehren_03(Brett,1,ValidPos,Store_ValidPos);
             return
         else
+            Temp_Brett = zeros(8,8,ValidPosNum);
             for k = 1:ValidPosNum
                 Temp_Brett(:,:,k) = Spielzug_durchfuehren_03(Brett,1,ValidPos(k,:),Store_ValidPos);
                 inner_stones = Inner_Counter(ValidPos(k,1), ValidPos(k,2), Temp_Brett(:,:,k));

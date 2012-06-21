@@ -14,7 +14,7 @@ addpath(['players' filesep 'Matlab_Othello']);
 % t1 = toc
 % save
 % tic
-Move_No = length(find(Brett~=0))-4;
+% Move_No = length(find(Brett~=0))-4;
 % t2 = toc
 % save('T.mat', 't1','t2');
 [ BestWert, BestBewegung, BestBewegungBrett ] = BaumFunktion(Brett,Farbe, Move_No);

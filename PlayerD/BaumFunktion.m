@@ -28,21 +28,30 @@ function [BestBewertung, BestZug, BestBrett ] = ...
 % Tiefe_Flag = 3;
 A = -Inf;
 B = Inf;
-Tiefe = 4;
-% if Move_No <= 14
-%     Tiefe = 5;
-% else if Move_No <= 50
-%         Tiefe = 4;
-%     else Tiefe = 3;
-%     end
-% end
+% Tiefe = 4;
+
 Akt_Zug = [];
 Store_ValidPos = [];
 Inner_Counters = [];
 
 if Farbe == -1
+    if Move_No > 50
+        Tiefe = 6;
+    else Tiefe = 4;
+    end
     [BestBewertung, BestZug, BestBrett ] = MiniMaxBlack(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
 else
+    if Move_No <= 15
+        Tiefe = 3;
+    else if Move_No >= 40 && Move_No <= 50
+        Tiefe = 5;
+        else if Move_No > 50
+                Tiefe = 6;
+            else
+                Tiefe = 4;
+            end
+        end
+    end
     [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
 end
 
