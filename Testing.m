@@ -10,19 +10,19 @@ board(5,5) = 1;
 
 col = 1;
 
-board
+%board
 
 
 
 for i=1:50
     disp('================ NEUER SPIELZUG =================')
-    col
+    %col
     if i == 1
         [ValPos, Store] = Valid_Pos_05(board, col, []);
     else
         [ValPos, Store] = Valid_Pos_05(board, col, [Store]);
     end
-    if ValPos(1,1) == 0
+    if ValPos(1,1) == -1
         disp('SPIELENDE!')
         break;
     end

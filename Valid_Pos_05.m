@@ -13,7 +13,7 @@ function [ ValidPos, Store_to_Tree ] = Valid_Pos_05(Aktuelles_Board, col, Store_
 % Incrementelle Implementierung von Valid Pos.
 % Falls Funktion ohne Store_from_Tree aufgerufen wird, muss dafür eine
 % leere Cell übergeben werden.
-tic;
+
 % Inkrementell rechnen oder nur mit dem aktuellen Board?
 Incremental = ~isempty(Store_from_Tree);
 
@@ -81,7 +81,6 @@ else
             break
         end
     end
-    Letzter_Zug
     
     % neuen Stein aus der Randliste Löschen:
     Randfeld_Board(Letzter_Zug(1), Letzter_Zug(2)) = 0;
@@ -194,7 +193,6 @@ Store_to_Tree.Board          = Aktuelles_Board;
 Store_to_Tree.Flipsteine     = FlipPos;
 Store_to_Tree.ValPos_cnt     = ValPos_cnt;
 
-%toc
 ValidPos =  ValPos(1:ValPos_cnt,:);
     
     if ValPos_cnt == 0
