@@ -10,28 +10,97 @@
 %outputs
 %   @counters_no_value: (Spieler-Gegner)/(Spieler+Gegner)
 
+%function[rating_value, rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
+function[rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
 
-function[rating_value, rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
-%function[rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
+%%
+%Variablen anlegen
+persistent black_wins_static_field_rating_value_vec_per;
+persistent black_wins_counters_no_rating_value_vec_per;
+persistent black_wins_border_counters_rating_value_vec_per;
+persistent black_wins_inertia_moment_rating_value_vec_per;
+persistent black_wins_compl_lines_rating_value_vec_per;
+
+persistent Diff_black_vec_static_field_rating_bool_vec_per;
+persistent Diff_black_vec_counters_no_rating_bool_vec_per;
+persistent Diff_black_vec_border_counters_rating_bool_vec_per;
+persistent Diff_black_vec_inertia_moment_rating_bool_vec_per;
+persistent Diff_black_vec_compl_lines_rating_bool_vec_per;
+
+persistent white_wins_static_field_rating_value_vec_per;
+persistent white_wins_counters_no_rating_value_vec_per;
+persistent white_wins_border_counters_rating_value_vec_per;
+persistent white_wins_inertia_moment_rating_value_vec_per;
+persistent white_wins_compl_lines_rating_value_vec_per;
+
+persistent Diff_white_vec_static_field_rating_bool_vec_per;
+persistent Diff_white_vec_counters_no_rating_bool_vec_per;
+persistent Diff_white_vec_border_counters_rating_bool_vec_per;
+persistent Diff_white_vec_inertia_moment_rating_bool_vec_per;
+persistent Diff_white_vec_compl_lines_rating_bool_vec_per;
+% %%
+%toc
 
 %%
 %Laden der Eichfunktionen
-
 % addpath('Weighting_Vectors');
 
-load('static_field_rating_bool_vec.mat');
-load('counters_no_rating_bool_vec.mat');
-load('border_counters_rating_bool_vec.mat');
-load('inertia_moment_rating_bool_vec.mat');
-load('compl_lines_rating_bool_vec.mat');
+if all(black_wins_static_field_rating_value_vec_per==0)
+   
+    load('black_wins_static_field_rating_value_vec.mat');
+    load('black_wins_counters_no_rating_value_vec.mat');
+    load('black_wins_border_counters_rating_value_vec.mat');
+    load('black_wins_inertia_moment_rating_value_vec.mat');
+    load('black_wins_compl_lines_rating_value_vec.mat');
+    
+    load('Diff_black_vec_static_field_rating_bool_vec.mat');
+    load('Diff_black_vec_counters_no_rating_bool_vec.mat');
+    load('Diff_black_vec_border_counters_rating_bool_vec.mat');
+    load('Diff_black_vec_inertia_moment_rating_bool_vec.mat');
+    load('Diff_black_vec_compl_lines_rating_bool_vec.mat');
+    
+    
+    load('white_wins_static_field_rating_value_vec.mat');
+    load('white_wins_counters_no_rating_value_vec.mat');
+    load('white_wins_border_counters_rating_value_vec.mat');
+    load('white_wins_inertia_moment_rating_value_vec.mat');
+    load('white_wins_compl_lines_rating_value_vec.mat');
+    
+    load('Diff_white_vec_static_field_rating_bool_vec.mat');
+    load('Diff_white_vec_counters_no_rating_bool_vec.mat');
+    load('Diff_white_vec_border_counters_rating_bool_vec.mat');
+    load('Diff_white_vec_inertia_moment_rating_bool_vec.mat');
+    load('Diff_white_vec_compl_lines_rating_bool_vec.mat');
+    
+    
+	black_wins_static_field_rating_value_vec_per=black_wins_static_field_rating_value_vec;
+	black_wins_counters_no_rating_value_vec_per=black_wins_counters_no_rating_value_vec;
+	black_wins_border_counters_rating_value_vec_per=black_wins_border_counters_rating_value_vec;
+	black_wins_inertia_moment_rating_value_vec_per=black_wins_inertia_moment_rating_value_vec;
+	black_wins_compl_lines_rating_value_vec_per=black_wins_compl_lines_rating_value_vec;
 
-load('static_field_rating_value_vec.mat');
-load('counters_no_rating_value_vec.mat');
-load('border_counters_rating_value_vec.mat');
-load('inertia_moment_rating_value_vec.mat');
-load('compl_lines_rating_value_vec.mat');
+    Diff_black_vec_static_field_rating_bool_vec_per=Diff_black_vec_static_field_rating_bool_vec;
+	Diff_black_vec_counters_no_rating_bool_vec_per=Diff_black_vec_counters_no_rating_bool_vec;
+	Diff_black_vec_border_counters_rating_bool_vec_per=Diff_black_vec_border_counters_rating_bool_vec;
+    Diff_black_vec_inertia_moment_rating_bool_vec_per=Diff_black_vec_inertia_moment_rating_bool_vec;
+	Diff_black_vec_compl_lines_rating_bool_vec_per=Diff_black_vec_compl_lines_rating_bool_vec;
+    
+	white_wins_static_field_rating_value_vec_per=white_wins_static_field_rating_value_vec;
+	white_wins_counters_no_rating_value_vec_per=white_wins_counters_no_rating_value_vec;
+	white_wins_border_counters_rating_value_vec_per=white_wins_border_counters_rating_value_vec;
+	white_wins_inertia_moment_rating_value_vec_per=white_wins_inertia_moment_rating_value_vec;
+	white_wins_compl_lines_rating_value_vec_per=white_wins_compl_lines_rating_value_vec;
 
+    Diff_white_vec_static_field_rating_bool_vec_per=Diff_white_vec_static_field_rating_bool_vec;
+	Diff_white_vec_counters_no_rating_bool_vec_per=Diff_white_vec_counters_no_rating_bool_vec;
+	Diff_white_vec_border_counters_rating_bool_vec_per=Diff_white_vec_border_counters_rating_bool_vec;
+    Diff_white_vec_inertia_moment_rating_bool_vec_per=Diff_white_vec_inertia_moment_rating_bool_vec;
+	Diff_white_vec_compl_lines_rating_bool_vec_per=Diff_white_vec_compl_lines_rating_bool_vec;
+    
 
+    
+end
+%tic
 %%
 %Aufrufen der einzelnen Gewichtungsfunktionen
  rating=zeros(5,2);
@@ -60,22 +129,53 @@ load('compl_lines_rating_value_vec.mat');
  
  %%
  %Weighting of the ratings
-%  rating_value=0;
-%  rating_value=rating_value + static_field_rating_bool_vec((move_no+1)/2) * rating(1,2) / static_field_rating_value_vec((move_no+1)/2);
-%  rating_value=rating_value + counters_no_rating_bool_vec((move_no+1)/2) * rating(1,2) / counters_no_rating_value_vec((move_no+1)/2);
-%  rating_value=rating_value + border_counters_rating_bool_vec((move_no+1)/2) * rating(1,2) / border_counters_rating_value_vec((move_no+1)/2);
-%  rating_value=rating_value + inertia_moment_rating_bool_vec((move_no+1)/2) * rating(1,2) / inertia_moment_rating_value_vec((move_no+1)/2);
-%  rating_value=rating_value + compl_lines_rating_bool_vec((move_no+1)/2) * rating(1,2) / compl_lines_rating_value_vec((move_no+1)/2);
-%  
+ %ungerade Züge, schwarz
+ if mod(move_no,2)==1
 
-%%%%%%%%%%%%%%%%Einfach selben Wert 2x abspeichern
- rating_value=0;
- rating_value=rating_value + static_field_rating_bool_vec(move_no) * rating(1,2) / static_field_rating_value_vec(move_no);
- rating_value=rating_value + counters_no_rating_bool_vec(move_no) * rating(1,2) / counters_no_rating_value_vec(move_no);
- rating_value=rating_value + border_counters_rating_bool_vec(move_no) * rating(1,2) / border_counters_rating_value_vec(move_no);
- rating_value=rating_value + inertia_moment_rating_bool_vec(move_no) * rating(1,2) / inertia_moment_rating_value_vec(move_no);
- rating_value=rating_value + compl_lines_rating_bool_vec(move_no) * rating(1,2) / compl_lines_rating_value_vec(move_no);
-%%%%%%%%%%%%%%%%Einfach selben Wert 2x abspeichern
+     rating_value=0;
+     rating_value=rating_value + Diff_black_vec_static_field_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_static_field_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_counters_no_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_counters_no_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_border_counters_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_border_counters_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_inertia_moment_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_inertia_moment_rating_value_vec_per((move_no+1)/2);
+     
+     if black_wins_compl_lines_rating_value_vec_per((move_no+1)/2) ~= 0
+        rating_value=rating_value + Diff_black_vec_compl_lines_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_compl_lines_rating_value_vec_per((move_no+1)/2);
+     end
+     
+%gerade Züge, weiß
+ elseif mod(move_no,2)==0
+     rating_value=0;
+     rating_value=rating_value + Diff_white_vec_static_field_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_static_field_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_counters_no_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_counters_no_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_border_counters_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_border_counters_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_inertia_moment_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_inertia_moment_rating_value_vec_per(move_no/2);
+     
+     if white_wins_compl_lines_rating_value_vec_per(move_no/2) ~= 0
+        rating_value=rating_value + Diff_white_vec_compl_lines_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_compl_lines_rating_value_vec_per(move_no/2);
+     end
+     
+ end
+     
+%  rating_value=0;
+%  rating_value=rating_value + static_field_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / static_field_rating_value_vec_per((move_no+1)/2);
+%  rating_value=rating_value + counters_no_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / counters_no_rating_value_vec_per((move_no+1)/2);
+%  rating_value=rating_value + border_counters_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / border_counters_rating_value_vec_per((move_no+1)/2);
+%  rating_value=rating_value + inertia_moment_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / inertia_moment_rating_value_vec_per((move_no+1)/2);
+%  if compl_lines_rating_value_vec_per((move_no+1)/2) ~= 0
+%     rating_value=rating_value + compl_lines_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / compl_lines_rating_value_vec_per((move_no+1)/2);
+%  end
+
+
+%  rating_value=0;
+%  rating_value=rating_value + static_field_rating_bool_vec_per(move_no) * rating(1,2) / static_field_rating_value_vec_per(move_no);
+%  rating_value=rating_value + counters_no_rating_bool_vec_per(move_no) * rating(1,2) / counters_no_rating_value_vec_per(move_no);
+%  rating_value=rating_value + border_counters_rating_bool_vec_per(move_no) * rating(1,2) / border_counters_rating_value_vec_per(move_no);
+%  rating_value=rating_value + inertia_moment_rating_bool_vec_per(move_no) * rating(1,2) / inertia_moment_rating_value_vec_per(move_no);
+%  if compl_lines_rating_value_vec_per(move_no) ~= 0
+%     rating_value=rating_value + compl_lines_rating_bool_vec_per(move_no) * rating(1,2) / compl_lines_rating_value_vec_per(move_no);
+%  end
+
+
  %%
 %disp('compl_lines_rating')
 %toc
@@ -146,17 +246,22 @@ function  [static_field_value, static_field_bool]= static_field_rating(color, BO
 %             end
 %         end
 %     end
-%     
+% %     
+%     disp('here');
 %     BOARD_MAT
+
     
     STATIC_WEIGHT_MAT=STATIC_WEIGHT_MAT(:);
     BOARD_MAT=BOARD_MAT(:);
     
     
+    
     static_field_value=(BOARD_MAT'*STATIC_WEIGHT_MAT)*color;
     if static_field_value>=0
         static_field_bool=1;
-    else
+    elseif static_field_value==0
+        static_field_bool=0;
+    elseif static_field_value<0
         static_field_bool=-1;
     end
 %     
@@ -176,12 +281,14 @@ function  [static_field_value, static_field_bool]= static_field_rating(color, BO
     
     function [counters_no_value, counters_no_bool]=counters_no_rating(color, move_no, BOARD_MAT)
     
-        counters_no_value=sum(sum(BOARD_MAT))/(move_no+4)*color;
-        
+       % counters_no_value=sum(sum(BOARD_MAT))/(move_no+4)*color;
+        counters_no_value=sum(sum(BOARD_MAT))*color;
         
         if counters_no_value>=0
             counters_no_bool=1;
-        else
+        elseif counters_no_value==0
+            counters_no_bool=0;
+        elseif counters_no_value<0
             counters_no_bool=-1;
         end
         
@@ -318,7 +425,9 @@ function  [static_field_value, static_field_bool]= static_field_rating(color, BO
         
         if border_counters_value>=0
             border_counters_bool=1;
-        else
+        elseif border_counters_value==0
+            border_counters_bool=0;
+        elseif border_counters_value<0
             border_counters_bool=-1;
         end
 %         
@@ -396,7 +505,9 @@ function  [static_field_value, static_field_bool]= static_field_rating(color, BO
         inertia_moment_value=own_inertia_moment_value-foreign_inertia_moment_value;
         if inertia_moment_value>=0
             inertia_moment_bool=1;
-        else
+        elseif inertia_moment_value==0
+            inertia_moment_bool=0;
+        elseif inertia_moment_value<0
             inertia_moment_bool=-1;
         end
     
@@ -418,11 +529,11 @@ function  [static_field_value, static_field_bool]= static_field_rating(color, BO
         compl_lines_value=size(find(rows==color*8),2)+size(find(columns==color*8),1);
         compl_lines_value=compl_lines_value-size(find(rows==-color*8),2)-size(find(columns==-color*8),1);
         
-        if compl_lines_value>0
+        if compl_lines_value>=0
             compl_lines_bool=1;
-        elseif(compl_lines_value==0)
+        elseif compl_lines_value==0
              compl_lines_bool=0;
-        else
+        elseif compl_lines_value<0
             compl_lines_bool=-1;
         end
       
