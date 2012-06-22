@@ -10,8 +10,8 @@
 %outputs
 %   @counters_no_value: (Spieler-Gegner)/(Spieler+Gegner)
 
-%function[rating_value, rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
-function[rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
+function[rating_value]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
+%function[rating]= rating_fct(color, move_no, BOARD_MAT, Inner_Counters)
 
 %%
 %Variablen anlegen
@@ -124,34 +124,36 @@ end
  %disp('inertia_moment_rating')
  %toc
  
+ BOARD_MAT
  %tic
  [rating(5,1),rating(5,2)]=compl_lines_rating(color, BOARD_MAT);
  
+ rating
  %%
  %Weighting of the ratings
  %ungerade Züge, schwarz
  if mod(move_no,2)==1
 
      rating_value=0;
-     rating_value=rating_value + Diff_black_vec_static_field_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_static_field_rating_value_vec_per((move_no+1)/2);
-     rating_value=rating_value + Diff_black_vec_counters_no_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_counters_no_rating_value_vec_per((move_no+1)/2);
-     rating_value=rating_value + Diff_black_vec_border_counters_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_border_counters_rating_value_vec_per((move_no+1)/2);
-     rating_value=rating_value + Diff_black_vec_inertia_moment_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_inertia_moment_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_static_field_rating_bool_vec_per((move_no+1)/2) * rating(1,1) / black_wins_static_field_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_counters_no_rating_bool_vec_per((move_no+1)/2) * rating(2,1) / black_wins_counters_no_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_border_counters_rating_bool_vec_per((move_no+1)/2) * rating(3,1) / black_wins_border_counters_rating_value_vec_per((move_no+1)/2);
+     rating_value=rating_value + Diff_black_vec_inertia_moment_rating_bool_vec_per((move_no+1)/2) * rating(4,1) / black_wins_inertia_moment_rating_value_vec_per((move_no+1)/2);
      
      if black_wins_compl_lines_rating_value_vec_per((move_no+1)/2) ~= 0
-        rating_value=rating_value + Diff_black_vec_compl_lines_rating_bool_vec_per((move_no+1)/2) * rating(1,2) / black_wins_compl_lines_rating_value_vec_per((move_no+1)/2);
+        rating_value=rating_value + Diff_black_vec_compl_lines_rating_bool_vec_per((move_no+1)/2) * rating(5,1) / black_wins_compl_lines_rating_value_vec_per((move_no+1)/2);
      end
      
 %gerade Züge, weiß
  elseif mod(move_no,2)==0
      rating_value=0;
-     rating_value=rating_value + Diff_white_vec_static_field_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_static_field_rating_value_vec_per(move_no/2);
-     rating_value=rating_value + Diff_white_vec_counters_no_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_counters_no_rating_value_vec_per(move_no/2);
-     rating_value=rating_value + Diff_white_vec_border_counters_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_border_counters_rating_value_vec_per(move_no/2);
-     rating_value=rating_value + Diff_white_vec_inertia_moment_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_inertia_moment_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_static_field_rating_bool_vec_per(move_no/2) * rating(1,1) / white_wins_static_field_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_counters_no_rating_bool_vec_per(move_no/2) * rating(2,1) / white_wins_counters_no_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_border_counters_rating_bool_vec_per(move_no/2) * rating(3,1) / white_wins_border_counters_rating_value_vec_per(move_no/2);
+     rating_value=rating_value + Diff_white_vec_inertia_moment_rating_bool_vec_per(move_no/2) * rating(4,1) / white_wins_inertia_moment_rating_value_vec_per(move_no/2);
      
      if white_wins_compl_lines_rating_value_vec_per(move_no/2) ~= 0
-        rating_value=rating_value + Diff_white_vec_compl_lines_rating_bool_vec_per(move_no/2) * rating(1,2) / white_wins_compl_lines_rating_value_vec_per(move_no/2);
+        rating_value=rating_value + Diff_white_vec_compl_lines_rating_bool_vec_per(move_no/2) * rating(5,1) / white_wins_compl_lines_rating_value_vec_per(move_no/2);
      end
      
  end
@@ -224,14 +226,14 @@ end
 
 
 function  [static_field_value, static_field_bool]= static_field_rating(color, BOARD_MAT)
-    STATIC_WEIGHT_MAT=[10000, 3000, 1000, 800, 800, 1000, -3000, 10000;
+    STATIC_WEIGHT_MAT=[10000, -3000, 1000, 800, 800, 1000, -3000, 10000;
                        -3000, -5000, -450, -500, -500, -450, -5000, -3000;
                        1000, -450, 30, 10, 10, 30, -450, 1000;
                        800, -500, 10, 50, 50, 10, -500, 800;
                        800, -500, 10, 50, 50, 10, -500, 800;
                        1000, -450, 30, 10, 10, 30, -450, 1000;
                        -3000, -5000, -450, -500, -500, -450, -5000, -3000;
-                        10000, 3000, 1000, 800, 800, 1000, -3000, 10000;];
+                        10000, -3000, 1000, 800, 800, 1000, -3000, 10000;];
     
 %     BOARD_MAT=rand(8,8);
 %     
