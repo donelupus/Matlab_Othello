@@ -17,7 +17,7 @@
 
 
 function [BestBewertung, BestZug, BestBrett ] = ...
-            BaumFunktion( Brett, Farbe, Move_No)
+            BaumFunktion( Brett, Farbe, Move_No, RestTime)
 %             BaumFunktion( Brett, Farbe, Tiefe, Store_ValidPos,RatingFarbe, Zug_Zaehler)
 %         Brett, A, B, Tiefe, Move_No, Inner_Counters, Akt_Zug, Store_ValidPos
 % Statische Variable Tiefe_Flag: 
@@ -26,7 +26,7 @@ function [BestBewertung, BestZug, BestBrett ] = ...
 % persistent Index_Brett Index_Zug Index_ValidPos  Index_StoreValidPos ...
 %            Index_Rating Index_KnotenID Index_VorBrettID;
 % Tiefe_Flag = 3;
-tic;
+% tic;
 A = -Inf;
 B = Inf;
 % Tiefe = 4;
@@ -35,31 +35,33 @@ Akt_Zug = [];
 Store_ValidPos = [];
 Inner_Counters = [];
 
-if Farbe == -1
-    if Move_No > 50
-        Tiefe = 6;
-    else Tiefe = 4;
-    end
-    [BestBewertung, BestZug, BestBrett ] = MiniMaxBlack(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
-else
-    if Move_No <= 15
-        Tiefe = 3;
-    else if Move_No >= 40 && Move_No <= 50
+if RestTime > 20
+    if Move_No < 30
+        Tiefe = 4;
+    elseif Move_No >= 30 && Move_No < 40
         Tiefe = 5;
-        else if Move_No > 50
-                Tiefe = 6;
-            else
-                Tiefe = 4;
-            end
-        end
+    elseif Move_No >= 40 && Move_No < 49
+        Tiefe = 6;
+%     elseif Move_No >= 46 && Move_No < 49
+%         Tiefe = Move_No - 37;
+    else
+        Tiefe = 60-Move_No;
     end
-    [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
+elseif RestTime > 10 && RestTime <= 20
+    Tiefe = 4;
+else
+    Tiefe = 2;
 end
 
-BaumTime = toc;
-disp('Time Baum:#######');
-disp(BaumTime);
-disp('end!#############');
+if Farbe == -1
+    [BestBewertung, BestZug, BestBrett ] = MiniMaxBlack(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
+else
+    [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
+end
+% BaumTime = toc;
+% disp('Time Baum:#######');
+% disp(BaumTime);
+% disp('end!#############');
 % Index_Brett = 1;
 % Index_Zug =2;
 % Index_ValidPos = 3;

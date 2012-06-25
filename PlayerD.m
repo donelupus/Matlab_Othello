@@ -24,7 +24,7 @@ end
  if b == 0 % size(b,1) == 1
     b = table;
     Move_No = length(find(b~=0))-4;
-    [ BestWert, BestBewegung, b ] = BaumFunktion(b,color, Move_No);
+    [ BestWert, BestBewegung, b ] = BaumFunktion(b,color, Move_No, t);
  end
  
  

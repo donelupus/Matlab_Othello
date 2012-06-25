@@ -124,11 +124,11 @@ end
  %disp('inertia_moment_rating')
  %toc
  
- BOARD_MAT
+%  BOARD_MAT
  %tic
  [rating(5,1),rating(5,2)]=compl_lines_rating(color, BOARD_MAT);
  
- rating
+%  rating
  %%
  %Weighting of the ratings
  %ungerade Züge, schwarz
