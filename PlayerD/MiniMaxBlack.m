@@ -5,8 +5,8 @@ BestZugIndex = [];
 BestBrett = [];
 
 if Tiefe <= 0
-%     BestBewertung = GetBoardEvalBetter(Brett,1,Move_No);
     Move_No = length(find(Brett~=0))-4;
+%     BestBewertung = GC_getBoardEvalBetter(Brett,1,Move_No);
     BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters);
 %     BestBewertung = rating_fct_2(-1,Brett);
 else

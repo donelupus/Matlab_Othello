@@ -37,11 +37,11 @@ Inner_Counters = [];
 
 if RestTime > 20
     if Move_No < 30
-        Tiefe = 4;
-    elseif Move_No >= 30 && Move_No < 40
         Tiefe = 5;
+    elseif Move_No >= 30 && Move_No < 40
+        Tiefe = 4;
     elseif Move_No >= 40 && Move_No < 49
-        Tiefe = 6;
+        Tiefe = 5;
 %     elseif Move_No >= 46 && Move_No < 49
 %         Tiefe = Move_No - 37;
     else
@@ -53,11 +53,17 @@ else
     Tiefe = 2;
 end
 
-if Farbe == -1
-    [BestBewertung, BestZug, BestBrett ] = MiniMaxBlack(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
-else
-    [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
-end
+% Tiefe = 1; % Test des Algorithmus mit Tiefe 1!
+% if Farbe == -1
+%     
+%     [BestBewertung, BestZug, BestBrett ] = MiniMaxBlack(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
+% else
+%     [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
+% end
+[BestBewertung BestBrett] = NegaMaxEnd(Brett, A, B, Tiefe, Farbe, Inner_Counters, Store_ValidPos);
+% disp('Bestbewertung######################');
+% BestBewertung
+BestZug = 0;
 % BaumTime = toc;
 % disp('Time Baum:#######');
 % disp(BaumTime);
