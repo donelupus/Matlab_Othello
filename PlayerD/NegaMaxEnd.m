@@ -1,4 +1,4 @@
-function [Bewertung BrettNeu] = NegaMaxEnd(Brett, A, B, Tiefe, Farbe, Inner_Counters, Store_ValidPos)
+function [Bewertung BrettNeu] = NegaMaxEnd(Brett, A, B, Tiefe, Farbe, Store_ValidPos)
 
 if  Tiefe <= 0
 %         Bewertung = rating_fct(b, color);
@@ -6,7 +6,7 @@ if  Tiefe <= 0
 %         Bewertung = GC_getBoardEvalBetter(Brett,Farbe,Move_No);
 %         Bewertung = rating_fct(Farbe,Move_No,Brett,Inner_Counters);
 %         Bewertung = rating_complex_table(Brett,Farbe);
-    Bewertung = rating_simple_table(Brett,Farbe);
+    Bewertung = rating_complex_table(Brett,Farbe);
     return;
 end
     
@@ -26,9 +26,9 @@ end
 BrettTemp = zeros(8,8,ValidPosNum);
 for k = 1:ValidPosNum
     BrettTemp(:,:,k) = Spielzug_durchfuehren_03(Brett,Farbe,ValidPos(k,:),Store_ValidPos);
-    inner_stones = Inner_Counter(ValidPos(k,1), ValidPos(k,2), BrettTemp(:,:,k));
+    %inner_stones = Inner_Counter(ValidPos(k,1), ValidPos(k,2), BrettTemp(:,:,k));
     %   Rekursiver Aufruf!
-    BewertungTemp = -NegaMaxTest(BrettTemp(:,:,k), -B, -A, Tiefe-1, -Farbe, inner_stones, Store_ValidPos);
+    BewertungTemp = -NegaMaxEnd(BrettTemp(:,:,k), -B, -A, Tiefe-1, -Farbe, Store_ValidPos);
     if BewertungTemp > Bewertung
         Bewertung = BewertungTemp;
         BrettBestIndex = k;

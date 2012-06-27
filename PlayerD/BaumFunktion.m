@@ -33,7 +33,7 @@ B = Inf;
 
 Akt_Zug = [];
 Store_ValidPos = [];
-Inner_Counters = [];
+%Inner_Counters = [];
 
 if RestTime > 20
     if Move_No < 30
@@ -60,7 +60,7 @@ end
 % else
 %     [BestBewertung, BestZug, BestBrett ] = MiniMaxWhite(Brett,A,B,Tiefe,Move_No,Inner_Counters, Akt_Zug, Store_ValidPos);
 % end
-[BestBewertung BestBrett] = NegaMaxEnd(Brett, A, B, Tiefe, Farbe, Inner_Counters, Store_ValidPos);
+[BestBewertung BestBrett] = NegaMaxEnd(Brett, A, B, Tiefe, Farbe, Store_ValidPos);
 % disp('Bestbewertung######################');
 % BestBewertung
 BestZug = 0;

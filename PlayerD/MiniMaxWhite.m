@@ -1,13 +1,15 @@
-function [BestBewertung, BestZug, BestBrett] = MiniMaxWhite(Brett, A, B, Tiefe, Move_No, Inner_Counters, Akt_Zug, Store_ValidPos)
+function [BestBewertung, BestZug, BestBrett] = MiniMaxWhite(Brett, A, B, Tiefe, Move_No, Akt_Zug, Store_ValidPos)
 maximal = -Inf;
 BestZug = [];
 BestZugIndex = [];
 BestBrett = [];
 
+
 if Tiefe <= 0
+    %Funktion 
     Move_No = length(find(Brett~=0))-4;    
 %     BestBewertung = GC_getBoardEvalBetter(Brett,1,Move_No);
-    BestBewertung = rating_fct(1,Move_No,Brett,Inner_Counters);
+    BestBewertung = rating_complex_table(Brett,1);
 %     BestBewertung = rating_fct_2(1,Brett);
 else
     [ValidPos, Store_ValidPos] = Valid_Pos_05(Brett,1,Store_ValidPos);
@@ -26,8 +28,8 @@ else
             Temp_Brett = zeros(8,8,ValidPosNum);
             for k = 1:ValidPosNum
                 Temp_Brett(:,:,k) = Spielzug_durchfuehren_03(Brett,1,ValidPos(k,:),Store_ValidPos);
-                inner_stones = Inner_Counter(ValidPos(k,1), ValidPos(k,2), Temp_Brett(:,:,k));
-                Temp_Bewertung = MiniMaxBlack(Temp_Brett(:,:,k), A, B, Tiefe-1, Move_No+1,inner_stones,ValidPos(k,:),Store_ValidPos);
+               % inner_stones = Inner_Counter(ValidPos(k,1), ValidPos(k,2), Temp_Brett(:,:,k));
+                Temp_Bewertung = MiniMaxBlack(Temp_Brett(:,:,k), A, B, Tiefe-1, Move_No+1,ValidPos(k,:),Store_ValidPos);
                 if Temp_Bewertung > maximal
                     maximal = Temp_Bewertung;
                     BestZugIndex = k;
